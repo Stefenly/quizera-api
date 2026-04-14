@@ -11,6 +11,11 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:1929}
     driver-class-name: org.postgresql.Driver
 
+#  url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+#  username: ${PGUSER}
+#  password: ${PGPASSWORD}
+#  driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
