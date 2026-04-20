@@ -53,3 +53,16 @@ spring:
 
 server:
   port: ${PORT:8084}
+
+#spring:
+#  application:
+#    name: quizera
+#
+#  main:
+#    allow-bean-definition-overriding: true
+#
+#  jpa:
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#    show-sql: true
