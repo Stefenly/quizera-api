@@ -38,11 +38,11 @@ public class AuthServiceImpl implements AuthService {
 
         // DEFAULT ROLE = STUDENT
         UserRole roleType = (request.getRole() == null)
-                ? UserRole.ROLE_STUDENT
+                ? UserRole.STUDENT
                 : request.getRole();
 
         // BLOCK ADMIN FROM FRONTEND (IMPORTANT SECURITY RULE)
-        if (roleType == UserRole.ROLE_ADMIN) {
+        if (roleType == UserRole.ADMIN) {
             throw new BadRequestException("Cannot register as ADMIN");
         }
 
