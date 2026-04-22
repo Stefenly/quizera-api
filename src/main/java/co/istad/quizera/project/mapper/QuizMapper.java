@@ -23,7 +23,7 @@ public class QuizMapper {
                 .isPublic(quiz.getIsPublic())
                 .createdAt(quiz.getCreatedAt())
 
-                // ✅ FIX HERE
+                // FIX HERE
                 .totalQuestions(
                         quiz.getQuestions() != null ? quiz.getQuestions().size() : 0
                 )

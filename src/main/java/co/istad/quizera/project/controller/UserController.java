@@ -26,7 +26,8 @@ public class UserController {
     private final RoleRepository roleRepository;
 
     // GET ALL USERS (ADMIN ONLY)
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @GetMapping
     public ResponseEntity<List<UserProfileDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -73,7 +74,7 @@ public class UserController {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Role adminRole = roleRepository.findByName(UserRole.ADMIN)
+        Role adminRole = roleRepository.findByName(UserRole.ROLE_ADMIN)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
         user.getRoles().clear();
@@ -91,7 +92,7 @@ public class UserController {
         User user = userRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Role teacherRole = roleRepository.findByName(UserRole.TEACHER)
+        Role teacherRole = roleRepository.findByName(UserRole.ROLE_TEACHER)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
         user.getRoles().add(teacherRole);

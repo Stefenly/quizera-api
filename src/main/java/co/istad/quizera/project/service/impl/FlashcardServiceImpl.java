@@ -7,7 +7,6 @@ import co.istad.quizera.project.entity.Flashcard;
 import co.istad.quizera.project.entity.FlashcardItem;
 import co.istad.quizera.project.entity.User;
 import co.istad.quizera.project.enums.Visibility;
-import co.istad.quizera.project.mapper.FlashcardMapper;
 import co.istad.quizera.project.repository.FlashcardRepository;
 import co.istad.quizera.project.repository.UserRepository;
 import co.istad.quizera.project.service.FlashcardService;
@@ -18,7 +17,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
