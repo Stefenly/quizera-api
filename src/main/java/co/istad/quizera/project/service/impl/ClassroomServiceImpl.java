@@ -110,7 +110,10 @@ public class ClassroomServiceImpl implements ClassroomService {
         Classroom classroom = classroomRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Class not found"));
 
-        classroomRepository.delete(classroom);
+//        classroomRepository.delete(classroom);
+
+        classroom.setDeleted(true);
+        classroomRepository.save(classroom);
     }
 
     private String generateClassCode() {
