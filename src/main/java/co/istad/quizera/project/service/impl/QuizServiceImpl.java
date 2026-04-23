@@ -99,6 +99,9 @@ public class QuizServiceImpl implements QuizService {
                 .orElseThrow(() -> new RuntimeException("Quiz not found"));
 
         quiz.setTitle(request.getTitle());
+        quiz.setIsPublic(
+                request.getIsPublic() != null ? request.getIsPublic() : quiz.getIsPublic()
+        );
 
         quizRepository.save(quiz);
 
