@@ -3,6 +3,7 @@ package co.istad.quizera.project.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -37,8 +38,11 @@ public class Quiz {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "quiz")
-    private Set<Question> questions;
+//    @OneToMany(mappedBy = "quiz")
+//    private Set<Question> questions;
+    @Builder.Default
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Question> questions = new HashSet<>();
 
     @OneToMany(mappedBy = "quiz")
     private Set<QuizAttempt> attempts;
