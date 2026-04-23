@@ -52,7 +52,9 @@ public class FlashcardServiceImpl implements FlashcardService {
             flashcard.setItems(items);
         }
 
-        return mapToResponse(flashcardRepository.save(flashcard));
+//        return mapToResponse(flashcardRepository.save(flashcard));
+        Flashcard saved = flashcardRepository.save(flashcard);
+        return mapToResponse(saved);
     }
 
     // GET BY ID
@@ -102,7 +104,9 @@ public class FlashcardServiceImpl implements FlashcardService {
             flashcard.getItems().addAll(items);
         }
 
-        return mapToResponse(flashcardRepository.save(flashcard));
+//      return mapToResponse(flashcardRepository.save(flashcard));
+        Flashcard saved = flashcardRepository.save(flashcard);
+        return mapToResponse(saved);
     }
 
     // DELETE
