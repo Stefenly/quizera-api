@@ -41,7 +41,8 @@ public class QuizServiceImpl implements QuizService {
                 .title(request.getTitle())
                 .createdBy(teacher)
                 .classroom(classroom)
-                .isPublic(false)
+//                .isPublic(false)
+                .isPublic(request.getIsPublic() != null ? request.getIsPublic() : false)
                 .build();
 
         quizRepository.save(quiz);

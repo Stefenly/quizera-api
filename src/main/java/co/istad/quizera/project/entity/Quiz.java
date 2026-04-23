@@ -21,10 +21,6 @@ public class Quiz {
     @Column(nullable = false, length = 150)
     private String title;
 
-//    @ManyToOne
-//    @JoinColumn(name = "class_id")
-//    private Classroom classroom;
-
     @ManyToOne
     @JoinColumn(name = "class_id", nullable = false)
     private Classroom classroom;
@@ -46,6 +42,5 @@ public class Quiz {
 
     @OneToMany(mappedBy = "quiz")
     private Set<QuizAttempt> attempts;
-
     private Integer durationInSeconds;
 }

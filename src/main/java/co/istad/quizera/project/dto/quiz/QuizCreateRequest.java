@@ -13,4 +13,6 @@ public class QuizCreateRequest {
     private Long classId;
     private List<QuestionDto> questions;
     private Long classroomId;
+
+    private Boolean isPublic;
 }

@@ -31,7 +31,7 @@ public class QuestionController {
 //        return questionService.createQuestions(quizId, dtos);
 //    }
 
-//    // ✅ CREATE MULTIPLE QUESTIONS
+//    //CREATE MULTIPLE QUESTIONS
 //    @PostMapping("/{quizId}")
 //    public List<QuestionDto> createQuestions(
 //            @PathVariable Long quizId,
