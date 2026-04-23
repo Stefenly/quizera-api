@@ -105,7 +105,8 @@ public class FlashcardServiceImpl implements FlashcardService {
         }
 
 //      return mapToResponse(flashcardRepository.save(flashcard));
-        Flashcard saved = flashcardRepository.save(flashcard);
+
+        Flashcard saved = flashcardRepository.saveAndFlush(flashcard);
         return mapToResponse(saved);
     }
 
@@ -123,6 +124,7 @@ public class FlashcardServiceImpl implements FlashcardService {
                 .title(f.getTitle())
                 .visibility(f.getVisibility().name())
                 .createdById(f.getCreatedBy().getId())
+                .createdAt(f.getCreatedAt())
                 .items(
                         f.getItems().stream()
                                 .map(i -> FlashcardItemDto.builder()
