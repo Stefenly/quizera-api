@@ -31,9 +31,17 @@ public class Flashcard {
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 
-    @CreationTimestamp
+//    @CreationTimestamp
+//    @Column(updatable = false)
+//    private LocalDateTime createdAt;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     @Builder.Default
     @OneToMany(mappedBy = "flashcard", cascade = CascadeType.ALL, orphanRemoval = true)
