@@ -11,23 +11,38 @@ import java.util.stream.Collectors;
 @Component
 public class QuizMapper {
 
-    public QuizResponse toDto(Quiz quiz) {
+//    public QuizResponse toDto(Quiz quiz) {
+//
+//        return QuizResponse.builder()
+//                .id(quiz.getId())
+//                .title(quiz.getTitle())
+//
+//                .classId(quiz.getClassroom() != null ? quiz.getClassroom().getId() : null)
+//                .createdById(quiz.getCreatedBy() != null ? quiz.getCreatedBy().getId() : null)
+//
+//                .isPublic(quiz.getIsPublic())
+//                .createdAt(quiz.getCreatedAt())
+//
+//                // FIX HERE
+//                .totalQuestions(
+//                        quiz.getQuestions() != null ? quiz.getQuestions().size() : 0
+//                )
+//
+//                .build();
+//    }
 
+    public QuizResponse toDto(Quiz quiz) {
         return QuizResponse.builder()
                 .id(quiz.getId())
                 .title(quiz.getTitle())
-
-                .classId(quiz.getClassroom() != null ? quiz.getClassroom().getId() : null)
-                .createdById(quiz.getCreatedBy() != null ? quiz.getCreatedBy().getId() : null)
-
+                .classroomId(quiz.getClassroom().getId())
+                .createdById(quiz.getCreatedBy().getId())
                 .isPublic(quiz.getIsPublic())
                 .createdAt(quiz.getCreatedAt())
-
-                // FIX HERE
                 .totalQuestions(
                         quiz.getQuestions() != null ? quiz.getQuestions().size() : 0
                 )
-
+                .durationInSeconds(quiz.getDurationInSeconds())
                 .build();
     }
 
@@ -42,6 +57,19 @@ public class QuizMapper {
                 .optionD(q.getOptionD())
                 .correctAnswer(q.getCorrectAnswer())
                 .imageUrl(q.getImageUrl())
+                .build();
+    }
+
+    public Question toEntity(QuestionDto dto) {
+        return Question.builder()
+                .questionText(dto.getQuestionText())
+                .type(dto.getType())
+                .optionA(dto.getOptionA())
+                .optionB(dto.getOptionB())
+                .optionC(dto.getOptionC())
+                .optionD(dto.getOptionD())
+                .correctAnswer(dto.getCorrectAnswer())
+                .imageUrl(dto.getImageUrl())
                 .build();
     }
 

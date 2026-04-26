@@ -25,6 +25,85 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
     private final GamificationService gamificationService;
 
     // SUBMIT QUIZ (AUTO GRADING)
+//    @Override
+//    public QuizAttemptResultDto submitAttempt(QuizSubmitRequest request) {
+//
+//        User user = getCurrentUser();
+//
+//        Quiz quiz = quizRepository.findById(request.getQuizId())
+//                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+//
+//        // TIMER CHECK
+//        long now = System.currentTimeMillis();
+//        long elapsedSeconds = (now - request.getStartedAt()) / 1000;
+//
+//        if (elapsedSeconds > quiz.getDurationInSeconds()) {
+//            throw new RuntimeException("Time is up! Quiz submission rejected.");
+//        }
+//
+//        // GET QUESTIONS
+//        List<Question> questions = questionRepository.findByQuiz(quiz);
+//
+//        Map<Long, Question> questionMap = questions.stream()
+//                .collect(Collectors.toMap(Question::getId, q -> q));
+//
+//        int score = 0;
+//
+//        List<QuestionResultDto> results = new ArrayList<>();
+//
+//        for (QuizSubmitRequest.AnswerDto ans : request.getAnswers()) {
+//
+//            Question q = questionMap.get(ans.getQuestionId());
+//
+//            if (q == null) continue;
+//
+//            boolean correct = q.getCorrectAnswer().equals(ans.getSelectedAnswer());
+//
+//            if (correct) score++;
+//
+//            results.add(QuestionResultDto.builder()
+//                    .questionId(q.getId())
+//                    .questionText(q.getQuestionText())
+//                    .correctAnswer(q.getCorrectAnswer())
+//                    .selectedAnswer(ans.getSelectedAnswer())
+//                    .isCorrect(correct)
+//                    .build());
+//        }
+//
+//        // GAMIFICATION LOGIC (ADD HERE)
+//        GamificationResultDto gamification = gamificationService.calculate(
+//                score,
+//                questions.size(),
+//                3, // streak (temporary, can improve later)
+//                user.getTotalXP()
+//        );
+//
+//        // update user XP
+//        user.setTotalXP(gamification.getTotalXP());
+//        userRepository.save(user);
+//
+//        // SAVE ATTEMPT
+//        QuizAttempt attempt = QuizAttempt.builder()
+//                .user(user)
+//                .quiz(quiz)
+//                .score(score)
+//                .totalQuestions(questions.size())
+//                .build();
+//
+//        attemptRepository.save(attempt);
+//
+//        // RETURN RESULT
+//        return QuizAttemptResultDto.builder()
+//                .id(attempt.getId())
+//                .quizId(quiz.getId())
+//                .score(score)
+//                .totalQuestions(questions.size())
+//                .completedAt(attempt.getCompletedAt())
+//                .results(results)
+//                .gamification(gamification)
+//                .build();
+//    }
+
     @Override
     public QuizAttemptResultDto submitAttempt(QuizSubmitRequest request) {
 
@@ -33,28 +112,27 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
         Quiz quiz = quizRepository.findById(request.getQuizId())
                 .orElseThrow(() -> new RuntimeException("Quiz not found"));
 
-        // TIMER CHECK
-        long now = System.currentTimeMillis();
-        long elapsedSeconds = (now - request.getStartedAt()) / 1000;
+        // SAFE TIMER
+        if (quiz.getDurationInSeconds() != null) {
+            long now = System.currentTimeMillis();
+            long elapsed = (now - request.getStartedAt()) / 1000;
 
-        if (elapsedSeconds > quiz.getDurationInSeconds()) {
-            throw new RuntimeException("Time is up! Quiz submission rejected.");
+            if (elapsed > quiz.getDurationInSeconds()) {
+                throw new RuntimeException("Time is up!");
+            }
         }
 
-        // GET QUESTIONS
         List<Question> questions = questionRepository.findByQuiz(quiz);
 
-        Map<Long, Question> questionMap = questions.stream()
+        Map<Long, Question> map = questions.stream()
                 .collect(Collectors.toMap(Question::getId, q -> q));
 
         int score = 0;
-
         List<QuestionResultDto> results = new ArrayList<>();
 
         for (QuizSubmitRequest.AnswerDto ans : request.getAnswers()) {
 
-            Question q = questionMap.get(ans.getQuestionId());
-
+            Question q = map.get(ans.getQuestionId());
             if (q == null) continue;
 
             boolean correct = q.getCorrectAnswer().equals(ans.getSelectedAnswer());
@@ -70,19 +148,6 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
                     .build());
         }
 
-        // GAMIFICATION LOGIC (ADD HERE)
-        GamificationResultDto gamification = gamificationService.calculate(
-                score,
-                questions.size(),
-                3, // streak (temporary, can improve later)
-                user.getTotalXP()
-        );
-
-        // update user XP
-        user.setTotalXP(gamification.getTotalXP());
-        userRepository.save(user);
-
-        // SAVE ATTEMPT
         QuizAttempt attempt = QuizAttempt.builder()
                 .user(user)
                 .quiz(quiz)
@@ -92,7 +157,6 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
 
         attemptRepository.save(attempt);
 
-        // RETURN RESULT
         return QuizAttemptResultDto.builder()
                 .id(attempt.getId())
                 .quizId(quiz.getId())
@@ -100,7 +164,6 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
                 .totalQuestions(questions.size())
                 .completedAt(attempt.getCompletedAt())
                 .results(results)
-                .gamification(gamification)
                 .build();
     }
 

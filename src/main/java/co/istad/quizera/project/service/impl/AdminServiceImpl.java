@@ -79,7 +79,7 @@ public class AdminServiceImpl implements AdminService {
                 .map(q -> QuizResponse.builder()
                         .id(q.getId())
                         .title(q.getTitle())
-                        .classId(q.getClassroom() != null ? q.getClassroom().getId() : null)
+                        .classroomId(q.getClassroom() != null ? q.getClassroom().getId() : null)
                         .createdById(q.getCreatedBy() != null ? q.getCreatedBy().getId() : null)
                         .isPublic(q.getIsPublic())
                         .createdAt(q.getCreatedAt())
