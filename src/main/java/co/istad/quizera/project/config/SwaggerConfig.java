@@ -13,8 +13,10 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(title = "Quizera API", version = "v1", description = "Quizera Project API"),
         security = @SecurityRequirement(name = "bearerAuth"),
         servers = {
-                @Server(url = "https://quizera-api-production-c2d1.up.railway.app")
+                @Server(url = "https://quizera-api-production-c2d1.up.railway.app"),
+                @Server(url = "http://localhost:8081")
         }
+
 )
 @SecurityScheme(
         name = "bearerAuth",

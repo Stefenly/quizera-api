@@ -1,5 +1,14 @@
 package co.istad.quizera.project.entity;
 
+import co.istad.quizera.project.enums.Visibility;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import co.istad.quizera.project.enums.Visibility;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -42,12 +51,17 @@ public class Quiz {
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 
-    @Builder.Default
-    @Column(name = "is_public", nullable = false)
-    private Boolean isPublic = false;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Visibility visibility;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Min(value = 10, message = "Duration must be at least 10 seconds")
+    @Max(value = 7200, message = "Duration cannot exceed 2 hours")
+    @Column(name = "duration_seconds")
+    private Integer durationInSeconds;
 
     @Builder.Default
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -57,17 +71,13 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz")
     private Set<QuizAttempt> attempts = new HashSet<>();
 
-    @Min(value = 10, message = "Duration must be at least 10 seconds")
-    @Max(value = 7200, message = "Duration cannot exceed 2 hours")
-    @Column(name = "duration_seconds")
-    private Integer durationInSeconds;
-
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
-    public void addQuestion(Question q) {
-        questions.add(q);
-        q.setQuiz(this);
+
+    public void addQuestion(Question question) {
+        questions.add(question);
+        question.setQuiz(this);
     }
 }

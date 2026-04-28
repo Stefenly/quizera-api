@@ -37,12 +37,19 @@ public class WebSecurityConfig {
 
                 // authorization rules
                 .authorizeHttpRequests(auth -> auth
+
+                        // PUBLIC ROUTES
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+
+                        .requestMatchers("/api/quizzes/public").permitAll()
+                        .requestMatchers("/api/flashcards/public").permitAll()
+
+                        // EVERYTHING ELSE
                         .anyRequest().authenticated()
                 )
 

@@ -7,17 +7,21 @@ import java.util.List;
 
 public interface QuizService {
 
-    QuizResponse createQuiz(Long teacherId, QuizCreateRequest request);
+    // CREATE
+    QuizResponse createQuiz(QuizCreateRequest request);
 
+    // READ
     QuizResponse getQuizById(Long id);
 
     List<QuizResponse> getAllPublicQuizzes();
 
-    List<QuizResponse> getAllQuizzes();
+    List<QuizResponse> getAllQuizzes(); // admin only
 
-    List<QuizResponse> getMyQuizzes(Long teacherId);
+    List<QuizResponse> getMyQuizzes(); // current logged-in user
 
+    // UPDATE
     QuizResponse updateQuiz(Long id, QuizCreateRequest request);
 
+    // DELETE
     void deleteQuiz(Long id);
 }

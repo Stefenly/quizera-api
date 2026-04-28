@@ -1,5 +1,6 @@
 package co.istad.quizera.project.dto.quiz;
 
+import co.istad.quizera.project.enums.Visibility;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -25,7 +26,7 @@ public class QuizResponse {
     private Long createdById;
 
     @NotNull
-    private Boolean isPublic;
+    private Visibility visibility;
 
     @NotNull
     private LocalDateTime createdAt;

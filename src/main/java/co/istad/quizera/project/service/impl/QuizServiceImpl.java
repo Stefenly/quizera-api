@@ -7,6 +7,7 @@ import co.istad.quizera.project.entity.Classroom;
 import co.istad.quizera.project.entity.Question;
 import co.istad.quizera.project.entity.Quiz;
 import co.istad.quizera.project.entity.User;
+import co.istad.quizera.project.enums.Visibility;
 import co.istad.quizera.project.mapper.QuizMapper;
 import co.istad.quizera.project.repository.ClassroomRepository;
 import co.istad.quizera.project.repository.QuizRepository;
@@ -126,15 +127,22 @@ import java.util.stream.Collectors;
 public class QuizServiceImpl implements QuizService {
 
     private final QuizRepository quizRepository;
-    private final UserRepository userRepository;
     private final ClassroomRepository classroomRepository;
     private final QuizMapper quizMapper;
+    private final UserRepository userRepository;
 
+    // 🔐 Get current user (you should replace later with Spring Security)
+    private User getCurrentUser() {
+        // TEMP SOLUTION (replace with JWT later)
+        return userRepository.findById(1L)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    // CREATE QUIZ
     @Override
-    public QuizResponse createQuiz(Long teacherId, QuizCreateRequest request) {
+    public QuizResponse createQuiz(QuizCreateRequest request) {
 
-        User teacher = userRepository.findById(teacherId)
-                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+        User teacher = getCurrentUser();
 
         Classroom classroom = classroomRepository.findById(request.getClassroomId())
                 .orElseThrow(() -> new RuntimeException("Classroom not found"));
@@ -143,14 +151,16 @@ public class QuizServiceImpl implements QuizService {
                 .title(request.getTitle())
                 .createdBy(teacher)
                 .classroom(classroom)
-                .isPublic(request.getIsPublic() != null ? request.getIsPublic() : false)
+                .visibility(request.getVisibility())
                 .durationInSeconds(request.getDurationInSeconds())
                 .build();
 
-        // SAVE QUESTIONS
-        for (QuestionDto qDto : request.getQuestions()) {
-            Question q = quizMapper.toEntity(qDto);
-            quiz.addQuestion(q);
+        // questions
+        if (request.getQuestions() != null) {
+            for (QuestionDto qDto : request.getQuestions()) {
+                Question q = quizMapper.toEntity(qDto);
+                quiz.addQuestion(q);
+            }
         }
 
         quizRepository.save(quiz);
@@ -158,21 +168,34 @@ public class QuizServiceImpl implements QuizService {
         return quizMapper.toDto(quiz);
     }
 
+    // GET BY ID
     @Override
     public QuizResponse getQuizById(Long id) {
-        return quizRepository.findById(id)
-                .map(quizMapper::toDto)
+        Quiz quiz = quizRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Quiz not found"));
+
+        return quizMapper.toDto(quiz);
     }
+
+    // PUBLIC QUIZZES
+//    @Override
+//    public List<QuizResponse> getAllPublicQuizzes() {
+//        return quizRepository
+//                .findByVisibility(co.istad.quizera.project.enums.Visibility.PUBLIC)
+//                .stream()
+//                .map(quizMapper::toDto)
+//                .toList();
+//    }
 
     @Override
     public List<QuizResponse> getAllPublicQuizzes() {
-        return quizRepository.findByIsPublicTrue()
+        return quizRepository.findByVisibility(Visibility.PUBLIC)
                 .stream()
                 .map(quizMapper::toDto)
                 .toList();
     }
 
+    // ADMIN
     @Override
     public List<QuizResponse> getAllQuizzes() {
         return quizRepository.findAll()
@@ -181,17 +204,19 @@ public class QuizServiceImpl implements QuizService {
                 .toList();
     }
 
+    // MY QUIZZES
     @Override
-    public List<QuizResponse> getMyQuizzes(Long teacherId) {
-        User teacher = userRepository.findById(teacherId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public List<QuizResponse> getMyQuizzes() {
 
-        return quizRepository.findByCreatedBy(teacher)
+        User user = getCurrentUser();
+
+        return quizRepository.findByCreatedBy(user)
                 .stream()
                 .map(quizMapper::toDto)
                 .toList();
     }
 
+    // UPDATE
     @Override
     public QuizResponse updateQuiz(Long id, QuizCreateRequest request) {
 
@@ -199,12 +224,13 @@ public class QuizServiceImpl implements QuizService {
                 .orElseThrow(() -> new RuntimeException("Quiz not found"));
 
         quiz.setTitle(request.getTitle());
-        quiz.setIsPublic(request.getIsPublic());
+        quiz.setVisibility(request.getVisibility());
         quiz.setDurationInSeconds(request.getDurationInSeconds());
 
         return quizMapper.toDto(quizRepository.save(quiz));
     }
 
+    // DELETE
     @Override
     public void deleteQuiz(Long id) {
         quizRepository.deleteById(id);

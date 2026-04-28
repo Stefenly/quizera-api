@@ -5,6 +5,7 @@ import co.istad.quizera.project.dto.user.AdminDashboardDto;
 import co.istad.quizera.project.dto.user.LeaderboardDto;
 import co.istad.quizera.project.dto.user.UserProfileDto;
 import co.istad.quizera.project.entity.QuizAttempt;
+import co.istad.quizera.project.mapper.QuizMapper;
 import co.istad.quizera.project.repository.*;
 import co.istad.quizera.project.service.AdminService;
 import co.istad.quizera.project.service.LeaderboardService;
@@ -22,8 +23,8 @@ public class AdminServiceImpl implements AdminService {
     private final QuizAttemptRepository attemptRepository;
     private final FlashcardRepository flashcardRepository;
     private final LeaderboardService leaderboardService;
+    private final QuizMapper quizMapper;
 
-    // DASHBOARD
     @Override
     public AdminDashboardDto getDashboard() {
 
@@ -44,7 +45,6 @@ public class AdminServiceImpl implements AdminService {
                 .build();
     }
 
-    // USERS
     @Override
     public List<UserProfileDto> getAllUsers() {
 
@@ -70,26 +70,12 @@ public class AdminServiceImpl implements AdminService {
         userRepository.deleteById(id);
     }
 
-    // QUIZZES (FULL SAFE FIX)
     @Override
     public List<QuizResponse> getAllQuizzes() {
 
         return quizRepository.findAll()
                 .stream()
-                .map(q -> QuizResponse.builder()
-                        .id(q.getId())
-                        .title(q.getTitle())
-                        .classroomId(q.getClassroom() != null ? q.getClassroom().getId() : null)
-                        .createdById(q.getCreatedBy() != null ? q.getCreatedBy().getId() : null)
-                        .isPublic(q.getIsPublic())
-                        .createdAt(q.getCreatedAt())
-
-                        .totalQuestions(
-                                q.getQuestions() != null ? q.getQuestions().size() : 0
-                        )
-
-                        .build()
-                )
+                .map(quizMapper::toDto)
                 .toList();
     }
 
@@ -98,7 +84,6 @@ public class AdminServiceImpl implements AdminService {
         quizRepository.deleteById(id);
     }
 
-    // LEADERBOARD
     @Override
     public List<LeaderboardDto> getLeaderboard(int limit) {
         return leaderboardService.getTopUsers(limit);

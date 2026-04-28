@@ -19,6 +19,7 @@
 
 package co.istad.quizera.project.dto.quiz;
 
+import co.istad.quizera.project.enums.Visibility;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -58,8 +59,7 @@ public class QuizCreateRequest {
     @NotEmpty(message = "Quiz must have at least one question")
     private List<@Valid QuestionDto> questions;
 
-    @Builder.Default
-    private Boolean isPublic = false;
+    private Visibility visibility;
 
     @Min(value = 10, message = "Minimum duration is 10 seconds")
     @Max(value = 86400, message = "Maximum duration is 24 hours")

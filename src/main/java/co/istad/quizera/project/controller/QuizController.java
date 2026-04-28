@@ -21,54 +21,45 @@ public class QuizController {
 
     private final QuizService quizService;
 
-    // CREATE QUIZ
-    @PostMapping("/{teacherId}")
-    public ResponseEntity<QuizResponse> createQuiz(
-            @Valid
-            @PathVariable Long teacherId,
-            @RequestBody QuizCreateRequest request
-    ) {
-        return ResponseEntity.ok(quizService.createQuiz(teacherId, request));
-    }
-
-    // GET BY ID
-    @GetMapping("/{id}")
-    public ResponseEntity<QuizResponse> getQuiz(@PathVariable Long id) {
-        return ResponseEntity.ok(quizService.getQuizById(id));
-    }
-
-    // GET PUBLIC QUIZZES
     @GetMapping("/public")
     public ResponseEntity<List<QuizResponse>> getPublicQuizzes() {
         return ResponseEntity.ok(quizService.getAllPublicQuizzes());
     }
 
-    // GET ALL (ADMIN)
-    @GetMapping
-    public ResponseEntity<List<QuizResponse>> getAllQuizzes() {
-        return ResponseEntity.ok(quizService.getAllQuizzes());
+    @GetMapping("/{id}")
+    public ResponseEntity<QuizResponse> getQuizById(@PathVariable Long id) {
+        return ResponseEntity.ok(quizService.getQuizById(id));
     }
 
-    // GET MY QUIZZES
-    @GetMapping("/my/{teacherId}")
-    public ResponseEntity<List<QuizResponse>> getMyQuizzes(@PathVariable Long teacherId) {
-        return ResponseEntity.ok(quizService.getMyQuizzes(teacherId));
+    @PostMapping
+    public ResponseEntity<QuizResponse> createQuiz(
+            @RequestBody @Valid QuizCreateRequest request
+    ) {
+        return ResponseEntity.ok(quizService.createQuiz(request));
     }
 
-    // UPDATE
+    @GetMapping("/my")
+    public ResponseEntity<List<QuizResponse>> getMyQuizzes() {
+        return ResponseEntity.ok(quizService.getMyQuizzes());
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<QuizResponse> updateQuiz(
-            @Valid
             @PathVariable Long id,
-            @RequestBody QuizCreateRequest request
+            @RequestBody @Valid QuizCreateRequest request
     ) {
         return ResponseEntity.ok(quizService.updateQuiz(id, request));
     }
 
-    // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteQuiz(@PathVariable Long id) {
         quizService.deleteQuiz(id);
         return ResponseEntity.ok("Quiz deleted successfully");
+    }
+
+
+    @GetMapping
+    public ResponseEntity<List<QuizResponse>> getAllQuizzes() {
+        return ResponseEntity.ok(quizService.getAllQuizzes());
     }
 }

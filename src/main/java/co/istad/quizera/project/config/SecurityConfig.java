@@ -4,6 +4,7 @@ import co.istad.quizera.project.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -35,22 +36,27 @@ public class SecurityConfig {
 
                         // PUBLIC ROUTES
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/index.html"
+                        ).permitAll()
 
-                        // ADMIN ONLY
+                        // PUBLIC CONTENT
+                        .requestMatchers(HttpMethod.GET, "/api/quizzes/public").permitAll()
+                        .requestMatchers("/api/flashcards/public").permitAll()
+
+                        // ROLE-BASED
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
-                        // TEACHER ONLY
                         .requestMatchers("/api/teacher/**").hasRole("TEACHER")
-
-                        // STUDENT ONLY
                         .requestMatchers("/api/student/**").hasRole("STUDENT")
 
-                        // ALL AUTHENTICATED USERS
+                        // AUTHENTICATED
                         .requestMatchers("/api/users/me").authenticated()
 
-                        // everything else must be authenticated
+                        // EVERYTHING ELSE
                         .anyRequest().authenticated()
                 )
 

@@ -25,6 +25,15 @@ public class FlashcardServiceImpl implements FlashcardService {
     private final FlashcardRepository flashcardRepository;
     private final UserRepository userRepository;
 
+
+    @Override
+    public List<FlashcardResponse> getPublicFlashcards() {
+        return flashcardRepository.findByVisibility(Visibility.PUBLIC)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
     // CREATE
     @Override
     public FlashcardResponse create(Long userId, FlashcardCreateRequest request) {

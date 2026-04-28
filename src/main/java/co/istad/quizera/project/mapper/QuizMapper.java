@@ -11,33 +11,19 @@ import java.util.stream.Collectors;
 @Component
 public class QuizMapper {
 
-//    public QuizResponse toDto(Quiz quiz) {
-//
-//        return QuizResponse.builder()
-//                .id(quiz.getId())
-//                .title(quiz.getTitle())
-//
-//                .classId(quiz.getClassroom() != null ? quiz.getClassroom().getId() : null)
-//                .createdById(quiz.getCreatedBy() != null ? quiz.getCreatedBy().getId() : null)
-//
-//                .isPublic(quiz.getIsPublic())
-//                .createdAt(quiz.getCreatedAt())
-//
-//                // FIX HERE
-//                .totalQuestions(
-//                        quiz.getQuestions() != null ? quiz.getQuestions().size() : 0
-//                )
-//
-//                .build();
-//    }
-
     public QuizResponse toDto(Quiz quiz) {
+        if (quiz == null) return null;
+
         return QuizResponse.builder()
                 .id(quiz.getId())
                 .title(quiz.getTitle())
-                .classroomId(quiz.getClassroom().getId())
-                .createdById(quiz.getCreatedBy().getId())
-                .isPublic(quiz.getIsPublic())
+                .classroomId(
+                        quiz.getClassroom() != null ? quiz.getClassroom().getId() : null
+                )
+                .createdById(
+                        quiz.getCreatedBy() != null ? quiz.getCreatedBy().getId() : null
+                )
+                .visibility(quiz.getVisibility())
                 .createdAt(quiz.getCreatedAt())
                 .totalQuestions(
                         quiz.getQuestions() != null ? quiz.getQuestions().size() : 0
@@ -74,8 +60,10 @@ public class QuizMapper {
     }
 
     public List<QuestionDto> toQuestionDtoList(List<Question> questions) {
+        if (questions == null) return List.of();
+
         return questions.stream()
                 .map(this::toQuestionDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

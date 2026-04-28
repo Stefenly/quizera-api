@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "questions")
 @Getter
@@ -45,11 +47,26 @@ public class Question {
     @Size(max = 255)
     private String optionD;
 
-    @NotNull(message = "Correct answer is required")
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private McqOption correctAnswer;
+
 
     @Size(max = 500)
     private String imageUrl;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }

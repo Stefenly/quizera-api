@@ -22,30 +22,6 @@ public class QuestionController {
     private final QuestionService questionService;
     private final FileUploadService fileUploadService;
 
-    // CREATE
-//    @PostMapping("/{quizId}")
-//    public List<QuestionDto> createQuestions(
-//            @PathVariable Long quizId,
-//            @RequestBody List<QuestionDto> dtos
-//    ) {
-//        return questionService.createQuestions(quizId, dtos);
-//    }
-
-//    //CREATE MULTIPLE QUESTIONS
-//    @PostMapping("/{quizId}")
-//    public List<QuestionDto> createQuestions(
-//            @PathVariable Long quizId,
-//            @RequestBody List<QuestionDto> dtos
-//    ) {
-//        return questionService.createQuestions(quizId, dtos);
-//    }
-//
-//    @PostMapping("/{quizId}")
-//    public QuestionDto create(@PathVariable Long quizId,
-//                              @RequestBody QuestionDto dto) {
-//        return questionService.createQuestion(quizId, dto);
-//    }
-
     // CREATE MULTIPLE QUESTIONS
     @PostMapping("/{quizId}/bulk")
     public List<QuestionDto> createQuestions(

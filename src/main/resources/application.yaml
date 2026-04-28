@@ -1,32 +1,3 @@
-#spring:
-#  main:
-#    allow-bean-definition-overriding: true
-#
-#  application:
-#    name: project
-#
-#  datasource:
-##    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/quizera_db011}
-##    username: ${PGUSER:postgres}
-##    password: ${PGPASSWORD:postgres}
-##    driver-class-name: org.postgresql.Driver
-#
-#  url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
-#  username: ${PGUSER}
-#  password: ${PGPASSWORD}
-#  driver-class-name: org.postgresql.Driver
-#
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
-#
-#server:
-#  port: ${PORT:8084}
-
 spring:
   main:
     allow-bean-definition-overriding: true
@@ -52,17 +23,4 @@ spring:
       initialization-fail-timeout: 60000
 
 server:
-  port: ${PORT:8084}
-
-#spring:
-#  application:
-#    name: quizera
-#
-#  main:
-#    allow-bean-definition-overriding: true
-#
-#  jpa:
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
-#    show-sql: true
+  port: ${PORT:8081}
