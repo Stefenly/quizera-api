@@ -2,6 +2,7 @@ package co.istad.quizera.project.controller;
 
 import co.istad.quizera.project.dto.flashcard.FlashcardItemDto;
 import co.istad.quizera.project.service.FlashcardItemService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,9 @@ public class FlashcardItemController {
     private final FlashcardItemService service;
 
     @PostMapping("/{flashcardId}")
-    public FlashcardItemDto create(@PathVariable Long flashcardId,
+    public FlashcardItemDto create(
+            @Valid
+            @PathVariable Long flashcardId,
                                    @RequestBody FlashcardItemDto dto) {
         return service.create(flashcardId, dto);
     }
@@ -26,7 +29,9 @@ public class FlashcardItemController {
     }
 
     @PutMapping("/{id}")
-    public FlashcardItemDto update(@PathVariable Long id,
+    public FlashcardItemDto update(
+            @Valid
+            @PathVariable Long id,
                                    @RequestBody FlashcardItemDto dto) {
         return service.update(id, dto);
     }

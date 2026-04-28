@@ -2,8 +2,8 @@ package co.istad.quizera.project.entity;
 
 import co.istad.quizera.project.enums.Visibility;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -22,20 +22,22 @@ public class Flashcard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Title is required")
+    @Size(max = 150, message = "Title must be less than 150 characters")
+    @Column(nullable = false, length = 150)
     private String title;
 
+    @NotNull(message = "Visibility is required")
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Visibility visibility;
 
-    @ManyToOne
+    @NotNull(message = "Creator is required")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 
-//    @CreationTimestamp
-//    @Column(updatable = false)
-//    private LocalDateTime createdAt;
-
-    @Column(updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
@@ -44,6 +46,10 @@ public class Flashcard {
     }
 
     @Builder.Default
-    @OneToMany(mappedBy = "flashcard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "flashcard",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private Set<FlashcardItem> items = new HashSet<>();
 }

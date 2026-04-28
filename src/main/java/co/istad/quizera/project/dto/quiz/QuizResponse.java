@@ -1,25 +1,6 @@
-//package co.istad.quizera.project.dto.quiz;
-//
-//import lombok.*;
-//import java.time.LocalDateTime;
-//
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
-//public class QuizResponse {
-//    private Long id;
-//    private String title;
-//    private Long classId;
-//    private Long createdById;
-//    private Boolean isPublic;
-//    private LocalDateTime createdAt;
-//    private Integer totalQuestions;
-//}
-
 package co.istad.quizera.project.dto.quiz;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -31,15 +12,25 @@ import java.time.LocalDateTime;
 @Builder
 public class QuizResponse {
 
+    @NotNull
     private Long id;
+
+    @NotNull
     private String title;
 
+    @NotNull
     private Long classroomId;
+
+    @NotNull
     private Long createdById;
 
+    @NotNull
     private Boolean isPublic;
+
+    @NotNull
     private LocalDateTime createdAt;
 
     private Integer totalQuestions;
+
     private Integer durationInSeconds;
 }

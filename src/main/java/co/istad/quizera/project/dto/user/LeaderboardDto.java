@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 @Builder
 public class LeaderboardDto {
-
     private Long userId;
     private String name;
     private Integer totalXP;

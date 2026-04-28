@@ -16,4 +16,8 @@ public interface UserService {
     UserProfileDto updateUser(Long id, UserUpdateRequest request);
 
     void deleteUser(Long id);
+
+    void makeAdmin(Long id);
+
+    void becomeTeacher(String email);
 }

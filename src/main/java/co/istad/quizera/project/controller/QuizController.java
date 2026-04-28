@@ -2,8 +2,8 @@ package co.istad.quizera.project.controller;
 
 import co.istad.quizera.project.dto.quiz.QuizCreateRequest;
 import co.istad.quizera.project.dto.quiz.QuizResponse;
-import co.istad.quizera.project.entity.Quiz;
 import co.istad.quizera.project.service.QuizService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +24,7 @@ public class QuizController {
     // CREATE QUIZ
     @PostMapping("/{teacherId}")
     public ResponseEntity<QuizResponse> createQuiz(
+            @Valid
             @PathVariable Long teacherId,
             @RequestBody QuizCreateRequest request
     ) {
@@ -57,6 +58,7 @@ public class QuizController {
     // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<QuizResponse> updateQuiz(
+            @Valid
             @PathVariable Long id,
             @RequestBody QuizCreateRequest request
     ) {

@@ -64,7 +64,7 @@ It supports role-based access for **Admin, Teacher, and Student**, allowing user
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Backend:** Spring Boot
 * **Database:** PostgreSQL / MySQL

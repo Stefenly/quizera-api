@@ -5,6 +5,7 @@ import co.istad.quizera.project.dto.flashcard.FlashcardResponse;
 import co.istad.quizera.project.entity.User;
 import co.istad.quizera.project.repository.UserRepository;
 import co.istad.quizera.project.service.FlashcardService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,9 @@ public class FlashcardController {
     private final FlashcardService flashcardService;
 
     @PostMapping("/{userId}")
-    public FlashcardResponse create(@PathVariable Long userId,
+    public FlashcardResponse create(
+            @Valid
+            @PathVariable Long userId,
                                     @RequestBody FlashcardCreateRequest request) {
         return flashcardService.create(userId, request);
     }
@@ -37,7 +40,9 @@ public class FlashcardController {
     }
 
     @PutMapping("/{id}")
-    public FlashcardResponse update(@PathVariable Long id,
+    public FlashcardResponse update(
+            @Valid
+            @PathVariable Long id,
                                     @RequestBody FlashcardCreateRequest request) {
         return flashcardService.update(id, request);
     }

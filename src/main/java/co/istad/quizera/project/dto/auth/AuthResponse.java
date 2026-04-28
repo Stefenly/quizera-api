@@ -14,8 +14,6 @@ import lombok.*;
 @Builder
 public class AuthResponse {
     private String accessToken;
-//    private String tokenType;
-
     @Builder.Default
     private String tokenType = "Bearer";
 }

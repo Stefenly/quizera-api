@@ -1,56 +1,21 @@
 package co.istad.quizera.project.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-//@Entity
-//@Table(name = "quizzes")
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
-//public class Quiz {
-//
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//
-//    @Column(nullable = false, length = 150)
-//    private String title;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "class_id", nullable = false)
-//    private Classroom classroom;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "created_by", nullable = false)
-//    private User createdBy;
-//
-//    @Builder.Default
-//    @Column(name = "is_public", nullable = false)
-//    private Boolean isPublic = false;
-//
-//    @Builder.Default
-//    @Column(name = "created_at", nullable = false)
-//    private LocalDateTime createdAt = LocalDateTime.now();
-//
-//    @Builder.Default
-//    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<Question> questions = new HashSet<>();
-//
-//    @OneToMany(mappedBy = "quiz")
-//    private Set<QuizAttempt> attempts;
-//
-//    private Integer durationInSeconds;
-//}
-
-
 @Entity
-@Table(name = "quizzes")
+@Table(
+        name = "quizzes",
+        indexes = {
+                @Index(name = "idx_quiz_class", columnList = "class_id"),
+                @Index(name = "idx_quiz_creator", columnList = "created_by")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -62,13 +27,17 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Title is required")
+    @Size(max = 150, message = "Title must be less than 150 characters")
     @Column(nullable = false, length = 150)
     private String title;
 
+    @NotNull(message = "Classroom is required")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = false)
     private Classroom classroom;
 
+    @NotNull(message = "Creator is required")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
@@ -88,6 +57,8 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz")
     private Set<QuizAttempt> attempts = new HashSet<>();
 
+    @Min(value = 10, message = "Duration must be at least 10 seconds")
+    @Max(value = 7200, message = "Duration cannot exceed 2 hours")
     @Column(name = "duration_seconds")
     private Integer durationInSeconds;
 
@@ -95,7 +66,6 @@ public class Quiz {
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
-
     public void addQuestion(Question q) {
         questions.add(q);
         q.setQuiz(this);
