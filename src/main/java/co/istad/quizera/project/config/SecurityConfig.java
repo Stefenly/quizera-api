@@ -48,7 +48,7 @@ public class SecurityConfig {
 
                         // PUBLIC CONTENT
                         .requestMatchers(HttpMethod.GET, "/api/quizzes/public").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/flashcards/public").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/flashcards/public").permitAll()g
                         // ROLE-BASED
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/teacher/**").hasRole("TEACHER")
