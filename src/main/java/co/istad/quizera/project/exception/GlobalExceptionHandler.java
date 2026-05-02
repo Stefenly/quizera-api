@@ -52,9 +52,13 @@ public class GlobalExceptionHandler {
     // 500 - Generic Error (fallback)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
-        return new ResponseEntity<>(
-                buildResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("error", ex.getMessage());
+
+        return ResponseEntity
+                .status(500)
+                .header("Content-Type", "application/json")
+                .body(body);
     }
 }
