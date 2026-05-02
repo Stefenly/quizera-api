@@ -25,10 +25,49 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+//        http
+//                .csrf(csrf -> csrf.disable())
+//                .cors(cors -> {})
+//
+//
+//                .sessionManagement(session ->
+//                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                )
+//
+//                .authorizeHttpRequests(auth -> auth
+//
+//                        // PUBLIC ROUTES
+//                        .requestMatchers("/api/auth/**").permitAll()
+//
+//                        .requestMatchers(
+//                                "/v3/api-docs/**",
+//                                "/swagger-ui/**",
+//                                "/swagger-ui.html",
+//                                "/swagger-ui/index.html"
+//                        ).permitAll()
+//
+//                        // PUBLIC CONTENT
+//                        .requestMatchers(HttpMethod.GET, "/api/quizzes/public").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/api/flashcards/public").permitAll()
+//                        // ROLE-BASED
+//                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/teacher/**").hasRole("TEACHER")
+//                        .requestMatchers("/api/student/**").hasRole("STUDENT")
+//
+//                        // AUTHENTICATED
+//                        .requestMatchers("/api/users/me").authenticated()
+//
+//                        // EVERYTHING ELSE
+//                        .anyRequest().authenticated()
+//                )
+//
+//                // ADD JWT FILTER
+//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> {})
-
+                .cors(org.springframework.security.config.Customizer.withDefaults())
 
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -36,7 +75,8 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // PUBLIC ROUTES
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅
+
                         .requestMatchers("/api/auth/**").permitAll()
 
                         .requestMatchers(
@@ -46,22 +86,12 @@ public class SecurityConfig {
                                 "/swagger-ui/index.html"
                         ).permitAll()
 
-                        // PUBLIC CONTENT
                         .requestMatchers(HttpMethod.GET, "/api/quizzes/public").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/flashcards/public").permitAll()
-                        // ROLE-BASED
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/teacher/**").hasRole("TEACHER")
-                        .requestMatchers("/api/student/**").hasRole("STUDENT")
 
-                        // AUTHENTICATED
-                        .requestMatchers("/api/users/me").authenticated()
-
-                        // EVERYTHING ELSE
                         .anyRequest().authenticated()
                 )
 
-                // ADD JWT FILTER
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -80,14 +110,32 @@ public class SecurityConfig {
     }
 
     @Bean
+//    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+//
+//        org.springframework.web.cors.CorsConfiguration config =
+//                new org.springframework.web.cors.CorsConfiguration();
+//
+//        config.setAllowedOrigins(java.util.List.of("*"));
+//        config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//        config.setAllowedHeaders(java.util.List.of("*"));
+//
+//        org.springframework.web.cors.UrlBasedCorsConfigurationSource source =
+//                new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+//
+//        source.registerCorsConfiguration("/**", config);
+//
+//        return source;
+//    }
+
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
 
         org.springframework.web.cors.CorsConfiguration config =
                 new org.springframework.web.cors.CorsConfiguration();
 
-        config.setAllowedOrigins(java.util.List.of("*"));
+        config.setAllowedOriginPatterns(java.util.List.of("*")); // ✅ FIX
         config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(java.util.List.of("*"));
+        config.setAllowCredentials(true); // ✅ IMPORTANT
 
         org.springframework.web.cors.UrlBasedCorsConfigurationSource source =
                 new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
