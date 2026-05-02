@@ -10,13 +10,16 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(
-        info = @Info(title = "Quizera API", version = "v1", description = "Quizera Project API"),
+        info = @Info(
+                title = "Quizera API",
+                version = "v1",
+                description = "Quizera Project API"
+        ),
         security = @SecurityRequirement(name = "bearerAuth"),
         servers = {
-                @Server(url = "https://quizera-api-production-c2d1.up.railway.app"),
+                @Server(url = "https://web-production-c383a.up.railway.app"),
                 @Server(url = "http://localhost:8081")
         }
-
 )
 @SecurityScheme(
         name = "bearerAuth",
@@ -24,4 +27,5 @@ import org.springframework.context.annotation.Configuration;
         scheme = "bearer",
         bearerFormat = "JWT"
 )
-public class SwaggerConfig {}
+public class SwaggerConfig {
+}

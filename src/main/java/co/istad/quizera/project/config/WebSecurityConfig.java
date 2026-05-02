@@ -4,9 +4,9 @@ import co.istad.quizera.project.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +24,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 @EnableMethodSecurity
+@Order(1) // 🔥 MAIN SECURITY (ACTIVE)
 public class WebSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -32,24 +33,23 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                // CORS
-                .cors(Customizer.withDefaults())
-
-                // CSRF off for REST API
+                // 🔥 Disable CSRF
                 .csrf(csrf -> csrf.disable())
 
-                // Stateless JWT auth
+                // 🔥 Enable CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
+                // 🔥 Stateless JWT
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // Authorization rules
+                // 🔥 Authorization rules
                 .authorizeHttpRequests(auth -> auth
 
-                        // Allow preflight requests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // Auth endpoints
+                        // Auth
                         .requestMatchers("/api/auth/**").permitAll()
 
                         // Swagger
@@ -68,32 +68,38 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                // JWT filter
+                // 🔥 JWT filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // Authentication manager
+    // =========================
+    // AUTH MANAGER
+    // =========================
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    // Password encoder
+    // =========================
+    // PASSWORD ENCODER
+    // =========================
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // =========================
+    // CORS CONFIG (FIX SWAGGER + FRONTEND)
+    // =========================
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOriginPatterns(List.of("*"));
-
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
