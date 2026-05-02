@@ -86,13 +86,11 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ CORS CONFIG (IMPORTANT FIX)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        // For development (safe + works with Swagger)
         config.setAllowedOriginPatterns(List.of("*"));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
